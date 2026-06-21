@@ -14,8 +14,8 @@ import sys
 import requests
 
 GRAFANA_URL      = os.getenv("GRAFANA_URL", "http://localhost:3000")
-GRAFANA_USER     = os.getenv("GRAFANA_USER", "admin")
-GRAFANA_PASSWORD = os.getenv("GRAFANA_PASSWORD", "admin")
+GRAFANA_USER     = os.getenv("GRAFANA_USER", "")
+GRAFANA_PASSWORD = os.getenv("GRAFANA_PASSWORD", "")
 INFLUXDB_BUCKET  = os.getenv("INFLUXDB_BUCKET", "realtime_metrics")
 DS_UID           = "influxdb-adaptive"
 OUTPUT_PATH      = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dashboards", "network-lens.json")
@@ -266,6 +266,12 @@ def main() -> None:
     parser.add_argument("--push", action="store_true",
                         help="Push dashboard to the live Grafana instance after generating")
     args = parser.parse_args()
+
+    if args.push:
+        missing = [v for v in ("GRAFANA_USER", "GRAFANA_PASSWORD") if not os.getenv(v)]
+        if missing:
+            print(f"[dashboard] ERROR: required env vars not set: {', '.join(missing)}", file=sys.stderr)
+            sys.exit(1)
 
     dashboard = build_dashboard(INFLUXDB_BUCKET)
     write_json(dashboard)

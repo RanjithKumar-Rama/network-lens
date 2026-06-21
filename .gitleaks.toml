@@ -1,0 +1,15 @@
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Allowlist for network-lens"
+paths = [
+    ".env.example",
+    ".gitignore",
+]
+regexes = [
+    "change_me",
+    "INFLUXDB_TOKEN",
+    "INFLUXDB_PASSWORD",
+    "GRAFANA_PASSWORD",
+]
