@@ -16,6 +16,7 @@ INFLUXDB_URL: str = os.getenv("INFLUXDB_URL", "http://127.0.0.1:8086")
 INFLUXDB_TOKEN: str = os.getenv("INFLUXDB_TOKEN", "")
 INFLUXDB_ORG: str = os.getenv("INFLUXDB_ORG", "homelab")
 INFLUXDB_BUCKET: str = os.getenv("INFLUXDB_BUCKET", "realtime_metrics")
+SNMP_COMMUNITY: str = os.getenv("SNMP_COMMUNITY", "public")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -184,7 +185,7 @@ def build_telegraf_config(
 [[inputs.snmp]]
   agents    = ["{ip}:161"]
   version   = 2
-  community = "public"
+  community = "{SNMP_COMMUNITY}"
   name      = "router_snmp"
 
   [[inputs.snmp.field]]
@@ -211,6 +212,7 @@ def write_config(config: str) -> None:
     tmp = CONFIG_PATH + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         f.write(config)
+    os.chmod(tmp, 0o600)
     os.replace(tmp, CONFIG_PATH)
     log.info("telegraf.conf written to %s", CONFIG_PATH)
 
