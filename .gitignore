@@ -1,0 +1,12 @@
+.env
+
+adaptive-network-analyzer/shared_config/telegraf.conf
+adaptive-network-analyzer/shared_config/telegraf.conf.tmp
+adaptive-network-analyzer/shared_config/telegraf.conf.state
+
+__pycache__/
+*.pyc
+*.pyo
+
+adaptive-network-analyzer/influx_data/
+adaptive-network-analyzer/grafana_data/
